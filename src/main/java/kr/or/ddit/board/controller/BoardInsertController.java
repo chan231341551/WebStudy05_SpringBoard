@@ -52,7 +52,7 @@ public class BoardInsertController {
 			int result = service.createBoard(board);
 			if(result > 0) {
 				viewName = "redirect:/board/boardView.do?what="+board.getBoNo();
-			}
+			} 
 			else {
 				model.addAttribute("message","서버 오류, 쫌다 다시");
 				viewName = "board/boardForm";
