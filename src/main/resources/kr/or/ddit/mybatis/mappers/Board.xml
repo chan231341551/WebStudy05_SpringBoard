@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.board.dao.BoardDAO">
+	
+	<sql id="searchFrag">
+      <where>
+			<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'writer'">
+						INSTR(BO_WRITER,#{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'content'">
+						INSTR(BO_CONTENT,#{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(BO_WRITER,#{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(BO_CONTENT,#{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+   </sql>
+	
+	<select id="selectTotalRecord" resultType="int" parameterType="PagingVO">
+		SELECT COUNT(*)
+		FROM FREEBOARD
+		<include refid="searchFrag"></include>
+	</select>
+	<select id="selectBoardList" resultType="BoardVO" parameterType="PagingVO" >
+		WITH ORDEREDBOARD AS(
+			SELECT
+				BO_NO,
+				BO_TITLE,
+				BO_WRITER,
+				BO_MAIL,
+				BO_DATE,
+				BO_HIT,
+				(
+					SELECT
+						COUNT(ATT_NO)
+					FROM ATTATCH
+					WHERE ATTATCH.BO_NO = FREEBOARD.BO_NO
+				)ATT_COUNT
+			FROM FREEBOARD
+			<include refid="searchFrag"></include>
+			ORDER BY BO_NO DESC
+		)
+		SELECT
+			A.*
+		FROM(
+			SELECT
+				ROWNUM RNUM,
+				ORDEREDBOARD.*
+			FROM ORDEREDBOARD
+		)A
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+			
+	</select>
+	
+	<resultMap type="BoardVO" id="boardMap" autoMapping="true">
+		<id property="boNo"  column="BOARD_NO" />
+		<collection property="attatchList" ofType="AttatchVO" autoMapping="true" />
+	</resultMap> 
+	<select id="selectBoard" resultMap="boardMap" parameterType="int">
+		SELECT
+    		A.BO_NO BOARD_NO,
+    		BO_TITLE,
+    		BO_WRITER,
+    		BO_IP,
+    		BO_MAIL,
+    		BO_PASS,
+    		BO_CONTENT,
+    		BO_DATE,
+    		BO_HIT,
+    		ATT_NO,
+    		ATT_FILENAME,
+    		ATT_SAVENAME, 
+    		ATT_MIME,
+    		ATT_FANCYSIZE, 
+    		ATT_DOWNLOAD,
+    		B.BO_NO 
+		FROM
+    		FREEBOARD A LEFT OUTER JOIN ATTATCH B ON (A.BO_NO = B.BO_NO)
+		WHERE
+   			 A.BO_NO=#{boNo}
+	</select>
+	
+<!-- 	조회수 증가 -->
+	<update id="incrementHit" parameterType="int">
+		UPDATE FREEBOARD
+		SET
+		BO_HIT = BO_HIT + 1
+		WHERE BO_NO = #{boNo}
+	</update>
+	
+	<insert id="insertBoard" parameterType="BoardVO">
+		<selectKey resultType="int" order="BEFORE"
+			keyProperty="boNo">SELECT FREEBOARD_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO	FREEBOARD 
+			(BO_NO, 
+			 BO_TITLE, 
+			 BO_CONTENT,
+			 BO_WRITER, 
+			 BO_MAIL,
+			 BO_PASS,
+			 BO_IP,
+			 BO_DATE,
+			 BO_HIT
+		) VALUES (
+			#{boNo}, 
+			#{boTitle,jdbcType=VARCHAR},
+			#{boContent,jdbcType=CLOB}
+			, #{boWriter,jdbcType=VARCHAR}
+			, #{boMail,jdbcType=VARCHAR}
+			, #{boPass,jdbcType=VARCHAR}
+			, #{boIp,jdbcType=VARCHAR} 
+			, SYSDATE
+			, 0
+		)
+	</insert>
+
+	<update id="updateBoard" parameterType="BoardVO">
+		UPDATE FREEBOARD 
+		SET
+			BO_TITLE = #{boTitle,jdbcType=VARCHAR}, 
+			BO_WRITER = #{boWriter,jdbcType=VARCHAR}, 
+			BO_CONTENT = #{boContent,jdbcType=CLOB},
+			BO_MAIL = #{boMail,jdbcType=VARCHAR},
+			BO_DATE = #{boDate,jdbcType=DATE}
+		WHERE 
+			BO_NO = #{boNo,jdbcType=NUMERIC}
+	</update>
+
+</mapper>
