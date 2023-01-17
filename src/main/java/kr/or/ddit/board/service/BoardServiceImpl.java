@@ -36,6 +36,7 @@ public class BoardServiceImpl implements BoardService {
 	@Inject
 	private PasswordEncoder encoder;
 	
+	//@Value의 장점은 PropertySource를 사용하여 다양한 프로퍼티 파일을 쉽게 불러들여서 값을 지정한다는 장점이 있다. 
 	@Value("#{appInfo.saveFiles}")
 	private File saveFiles;
 	
@@ -44,6 +45,8 @@ public class BoardServiceImpl implements BoardService {
 		log.info("EL로 주입된 첨부파일 저장 경로 : {}",saveFiles.getCanonicalPath());
 	}
 	
+	//CommonsMultipartResolver 의 프로퍼티를 이용하여 최대 가능한 업로드 사이즈 등 지정 가능
+//	StandardServletMultipartResolver -> Servlet 3.0 이상부터 표준
 	private int processAttathList(BoardVO board) {
 		List<AttatchVO> attatchList = board.getAttatchList();
 		if(attatchList==null || attatchList.isEmpty()) {
@@ -65,7 +68,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 	}
 	
-	@Transactional
+//	@Transactional //선언적 프로그래밍 기법 (AOP)
 	@Override
 	public int createBoard(BoardVO board) {
 		String plain = board.getBoPass();

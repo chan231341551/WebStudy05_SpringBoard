@@ -75,4 +75,16 @@
 <!-- 	Custom view preparer -->
 	<bean id="boardViewPreparer" class="kr.or.ddit.board.view.preparer.BoardViewPreparer"></bean>
 
+	<bean id="paginationManager" class="kr.or.ddit.ui.DefaultPaginationManager" >
+		<constructor-arg name="rendererMap">
+			<map>
+				<entry key="default">
+					<bean class="kr.or.ddit.ui.DefaultPaginationRenderer"></bean>
+				</entry>
+				<entry key="bootstrap">
+					<bean class="kr.or.ddit.ui.BootstrapPaginationRender"></bean>
+				</entry>
+			</map>
+		</constructor-arg>
+	</bean>
 </beans>

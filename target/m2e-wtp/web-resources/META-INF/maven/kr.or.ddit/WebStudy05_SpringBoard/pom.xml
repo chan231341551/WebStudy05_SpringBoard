@@ -11,7 +11,7 @@
 		<org.apache.logging.log4j-version>2.19.0</org.apache.logging.log4j-version>
 		<org.slf4j-version>1.7.25</org.slf4j-version>
 		<org.springframework-version>4.3.25.RELEASE</org.springframework-version>
-	</properties>
+  </properties>
 
 	<build>
 		<plugins>

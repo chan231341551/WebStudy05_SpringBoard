@@ -31,7 +31,7 @@ public class BoardRetrieveController {
 		,@ModelAttribute("simpleCondition") SearchVO searchVO
 		,Model model
 		) {
-			PagingVO<BoardVO> pagingVO = new PagingVO<>(4,2);
+			PagingVO<BoardVO> pagingVO = new PagingVO<>(8,4);
 			pagingVO.setCurrentPage(currentPage);
 			pagingVO.setSimpleCondition(searchVO);
 			

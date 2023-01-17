@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://www.ddit.or.kr/class305" prefix="ui" %>
 
 	<table class="table table-bordered">
 		<thead class="thead-dark">
@@ -41,17 +43,18 @@
 		<tfoot>
 			<tr>
 				<td colspan="7"> 
-					<div id="pagingArea">${pagingVO.pagingHTML}<!-- el에서는 직접적으로 getter을 호출하지 않는다. -->
-						<form:form id="searchUI" modelAttribute="simpleCondition" onclick="return false;">
-							<form:select path="searchType">
-								<option value>전체</option>
-								<form:option value="writer" label="작성자"></form:option>
-								<form:option value="content" label="글의내용"></form:option>
-							</form:select>
-							<form:input path="searchWord"/>
-							<input id="searchBtn" type="button" value="검색" />
-						</form:form>
+					<div id="pagingArea">
+						<ui:pagination pagingVO="${pagingVO }" type="bootstrap"/>
 					</div>
+					<form:form id="searchUI" modelAttribute="simpleCondition" onclick="return false;">
+						<form:select path="searchType">
+							<option value>전체</option>
+							<form:option value="writer" label="작성자"></form:option>
+							<form:option value="content" label="글의내용"></form:option>
+						</form:select>
+						<form:input path="searchWord"/>
+						<input id="searchBtn" type="button" value="검색" />
+					</form:form>
 				</td>
 			</tr>
 			<tr>

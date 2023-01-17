@@ -1,5 +1,6 @@
 package kr.or.ddit.board.controller;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -20,12 +21,20 @@ import kr.or.ddit.board.vo.BoardVO;
 import kr.or.ddit.validate.InsertGroup;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/board/boardInsert.do")
 @Controller
 public class BoardInsertController {
 	
 	private final BoardService service;
+	
+	@PostConstruct
+	public void init() {
+		log.info("주입된 service 객체 : {}",service.getClass().getName());
+	}
 	
 	@ModelAttribute("board")
 	public BoardVO board() {

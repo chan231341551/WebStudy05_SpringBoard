@@ -19,6 +19,7 @@
 			<tr>
 				<th>첨부파일</th>
 				<td>
+<%-- 					${status.last} -> 현재 루프가 마지막인지 반환  --%>
 					<c:forEach items="${board.attatchList }" var="attatch" varStatus="vs">
 						${attatch.attFilename } ${vs.last ? "" : "," }
 					</c:forEach>
@@ -33,10 +34,10 @@
 			<th>이메일</th>
 			<td>${board.boMail}</td>
 		</tr>
-		<tr>
-			<th>비밀번호</th>
-			<td>${board.boPass}</td>
-		</tr>
+<!-- 		<tr> -->
+<!-- 			<th>비밀번호</th> -->
+<%-- 			<td>${board.boPass}</td> --%>
+<!-- 		</tr> -->
 		<tr>
 			<th>내용</th>
 			<td>${board.boContent}</td>
@@ -60,7 +61,7 @@
             <c:url value="/board/boardDelete.do" var="deleteURL">
                <c:param name="what" value="${board.boNo }" />
             </c:url>
-            <a href="${deleteURL }" class="btn btn-primary">게시글삭제</a>
+            <a href="${deleteURL }" class="btn btn-danger">게시글삭제</a>
          </td>   
       </tr>
      

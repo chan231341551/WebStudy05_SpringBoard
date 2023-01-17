@@ -9,6 +9,20 @@
 	
 	<aop:aspectj-autoproxy />
 	
-	<tx:annotation-driven/>
+<!-- 	<tx:annotation-driven/> -->
+	
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<tx:method name="retrieve*" read-only="true"/>
+			<tx:method name="create*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* kr.or.ddit..service.*.*(..))" id="pointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+	</aop:config>
 
 </beans>
