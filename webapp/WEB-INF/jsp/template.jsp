@@ -50,13 +50,11 @@
 			<div class="row">
 					<tiles:insertAttribute name="leftMenu"/>
 				<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 					<!-- Main Content Area start -->
 						
-							<tiles:insertAttribute name="content"/>
+					<tiles:insertAttribute name="content"/>
 						
 					<!-- Main Content Area end -->
-					</div>
 				</main>
 			</div>
 		</div>

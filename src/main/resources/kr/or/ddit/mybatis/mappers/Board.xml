@@ -87,7 +87,7 @@
 	</select>
 	
 <!-- 	조회수 증가 -->
-	<update id="incrementHit" parameterType="int">
+	<update id="incrementHit" parameterType="BoardVO">
 		UPDATE FREEBOARD
 		SET
 		BO_HIT = BO_HIT + 1
@@ -127,10 +127,9 @@
 			BO_TITLE = #{boTitle,jdbcType=VARCHAR}, 
 			BO_WRITER = #{boWriter,jdbcType=VARCHAR}, 
 			BO_CONTENT = #{boContent,jdbcType=CLOB},
-			BO_MAIL = #{boMail,jdbcType=VARCHAR},
-			BO_DATE = #{boDate,jdbcType=DATE}
+			BO_MAIL = #{boMail,jdbcType=VARCHAR}
 		WHERE 
-			BO_NO = #{boNo,jdbcType=NUMERIC}
+			BO_NO = #{boNo}
 	</update>
 
 </mapper>

@@ -62,6 +62,14 @@
   		<filter-name>MultipartFilter</filter-name>
   		<url-pattern>/*</url-pattern>
   	</filter-mapping>
+  	<filter>
+  		<filter-name>springSecurityFilterChain</filter-name>
+  		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  	</filter>
+  	<filter-mapping>
+  		<filter-name>springSecurityFilterChain</filter-name>
+  		<url-pattern>/*</url-pattern>
+  	</filter-mapping>
   	
 	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
 <!-- 	 Spring MVC 프로그래밍 모델이 동작하기 위한 하위 컨테이너 생성 -->

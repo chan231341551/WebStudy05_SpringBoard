@@ -2,11 +2,13 @@ package kr.or.ddit.board.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.ddit.board.dao.AttatchDAO;
 import kr.or.ddit.board.dao.BoardDAO;
+import kr.or.ddit.board.exception.AuthenticationException;
 import kr.or.ddit.board.exception.NotExistBoardException;
 import kr.or.ddit.board.vo.AttatchVO;
 import kr.or.ddit.board.vo.BoardVO;
@@ -99,27 +102,45 @@ public class BoardServiceImpl implements BoardService {
 		boardDAO.incrementHit(boNo);
 		return selectBoard;
 	}
+	
+		
 
 	@Override
-	public ServiceResult modifyBoard(BoardVO board) {
-		// 게시글 존재 여부 확인
-		// 비번 인증
-		// 인증 성공시
-		// 게시글의 일반 데이터 수정
-		ServiceResult result = ServiceResult.INVALIDPASSWORD;
-//		encodePassword(board);
-		int cnt = boardDAO.updateBoard(board);
-		if(cnt>0) {
-			// 신규 파일에 대한 등록
-//			cnt += processes(board);
-			// 삭제할 파일에 대한 처리
-//			cnt += deleteFileProcesses(board);
-			result = ServiceResult.OK;
+	public int modifyBoard(BoardVO board) {
+		BoardVO savedBoard = boardDAO.selectBoard(board.getBoNo());
+		if(savedBoard == null) {
+			throw new NotExistBoardException(board.getBoNo());
 		}
-		else {
-			result = ServiceResult.FAIL;
+		boardAthenticate(board.getBoPass(),savedBoard.getBoPass());
+		// 1.board update
+		int rowcnt = boardDAO.updateBoard(board);
+		// 2.new attatch insert (metadata, binary)
+		rowcnt += processAttathList(board);
+		
+		int[] delAttNos = board.getDelAttNos();
+		Arrays.sort(delAttNos);
+		if(delAttNos != null && delAttNos.length > 0) {
+			// 3.delete attatch(metadata, binary)
+			rowcnt += attatchDAO.deleteAttathes(board);
+			String[] delAttSavenames = savedBoard.getAttatchList().stream()
+					  .filter(attatch->{
+						  // 트리구조 기반 이진탐색
+						  // 2,3만 걸러낸 attatch
+						  return Arrays.binarySearch(delAttNos, attatch.getAttNo()) >= 0;
+					  }).map(AttatchVO::getAttSavename)
+					  	.toArray(String[]::new);
+			for(String saveName : delAttSavenames) {
+				FileUtils.deleteQuietly(new File(saveFiles,saveName));
+			}
 		}
-		return result;
+		
+		return rowcnt;
+	}
+
+	private void boardAthenticate(String inputPass, String savedPass) {
+		if(!encoder.matches(inputPass, savedPass)) {
+			throw new AuthenticationException("비밀번호 인증 실패");
+		}
 	}
 
 	@Override

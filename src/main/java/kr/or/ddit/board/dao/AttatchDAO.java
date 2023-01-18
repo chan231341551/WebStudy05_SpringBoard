@@ -12,5 +12,6 @@ public interface AttatchDAO {
 	public int insertAttatches(BoardVO board);
 	public List<AttatchVO> selectAttatchList(int boNo);
 	public AttatchVO selectAttach(int attNo);
-	public int deleteAttaches(BoardVO board);
+	public List<String> selectSaveNamesForDelete(BoardVO board);
+	public int deleteAttathes(BoardVO board);
 }

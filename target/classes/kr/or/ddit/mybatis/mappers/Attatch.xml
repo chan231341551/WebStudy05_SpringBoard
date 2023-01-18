@@ -31,7 +31,26 @@
 			)		
 		</foreach>
 		SELECT * FROM DUAL
-	
 
 	</insert>
+	
+	<select parameterType="BoardVO" id="selectSaveNamesForDelete" resultType="string">
+		SELECT 
+			ATT_SAVENAME
+		FROM ATTATCH
+		WHERE ATT_NO IN 
+		<foreach item="attNo" collection="delAttNos" separator="," close=")" open="(">
+			#{attNo} 
+		</foreach>
+
+	</select>
+	
+	<delete parameterType="BoardVO" id="deleteAttathes">
+		DELETE FROM ATTATCH 
+		WHERE ATT_NO IN 
+		<foreach item="delNo" collection="delAttNos" separator="," close=")" open="(">
+			#{delNo} 
+		</foreach>
+
+	</delete>
 </mapper>

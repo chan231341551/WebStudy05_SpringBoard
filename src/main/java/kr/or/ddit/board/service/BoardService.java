@@ -24,7 +24,7 @@ public interface BoardService {
 	 * @param board
 	 * @return 존재여부, 인증성공여부(AuthenticationException), rowcnt
 	 */
-	public ServiceResult modifyBoard(BoardVO board);
+	public int modifyBoard(BoardVO board);
 	public int removeBoard(int boNo);
 
 	public AttatchVO retrieveFordownload(int attNo);
