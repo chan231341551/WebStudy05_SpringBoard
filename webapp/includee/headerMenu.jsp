@@ -10,7 +10,7 @@
       <a class="nav-link" href="${pageContext.request.contextPath}/board/boardList.do">자유게시판</a>
     </li>
     <li class="nav-item text-nowrap">
-      <a class="nav-link" href="#">회원관리</a>
+      <a class="nav-link" href="${pageContext.request.contextPath}/member/memberList.do">회원관리</a>
     </li>
     <li class="nav-item text-nowrap">
       <a class="nav-link" href="#">상품관리</a>

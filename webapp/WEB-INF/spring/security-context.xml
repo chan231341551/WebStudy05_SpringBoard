@@ -17,7 +17,7 @@
 <!-- 				<user name="b001" authorities="ROLE_ADMIN" password="java"/> -->
 <!-- 			</user-service> -->
 	
-	<authentication-manager>
+	<authentication-manager id="authenticationManager">
 		<authentication-provider user-service-ref="memberDAO">
 			<password-encoder ref="passwordEncoder" />
 		</authentication-provider>
@@ -36,6 +36,19 @@
 		<intercept-url pattern="/board/boardView.do" access="permitAll"/>
 		<intercept-url pattern="/board/**.do" access="isAuthenticated()" />
 		<intercept-url pattern="/mypage" access="isAuthenticated()"/>
+		
+<!-- 		<intercept-url pattern="/member/memberList.do" access="hasRole('ROLE_ADMIN')"/> -->
+<!-- 		<intercept-url pattern="/member/memberView.do" access="hasRole('ROLE_ADMIN')"/> -->
+<!-- 		<intercept-url pattern="/member/memberDelete.do" access="hasRole('ROLE_USER')"/> -->
+<!-- 		<intercept-url pattern="/member/memberUpdate.do" access="isAuthenticated()"/> -->
+<!-- 		<intercept-url pattern="/prod/prodInsert.do" access="hasRole('ROLE_ADMIN')"/> -->
+<!-- 		<intercept-url pattern="/prod/prodUpdate.do" access="hasRole('ROLE_ADMIN')"/> -->
+				
+<!-- 		<intercept-url pattern="/mypage.do" access="hasAnyRole(['ROLE_ADMIN', 'ROLE_USER'])"/> -->
+<!-- 		<intercept-url pattern="/member/memberInsert.do" access="isAnonymous()"/> -->
+<!-- 		<intercept-url pattern="/login/loginForm.jsp" access="isAnonymous()"/> -->
+<!-- 		<intercept-url pattern="/login/loginProcess.do" access="isAnonymous()"/> -->
+<!-- 		<intercept-url pattern="/login/*" access="isAuthenticated()"/> -->
 		
 		<csrf disabled="false"/>
 	</http>
